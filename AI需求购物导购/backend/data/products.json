@@ -1,0 +1,67 @@
+[
+  {
+    "id": "p1",
+    "name": "3D遮光睡眠眼罩",
+    "category": "遮光眼罩",
+    "price": 89.0,
+    "rating": 4.8,
+    "review_count": 2100,
+    "image_url": "https://via.placeholder.com/150?text=Eye+Mask",
+    "features": ["100%遮光", "立体剪裁", "透气"],
+    "pros": ["舒适透气", "侧睡友好", "完全遮光"],
+    "cons": ["头带偏紧", "需要调节"],
+    "recommendation_reason": "针对您对光线敏感的问题，这款眼罩提供100%物理遮光，且立体剪裁不压迫眼球，适合对舒适度要求高的用户。"
+  },
+  {
+    "id": "p2",
+    "name": "智能白噪音助眠机",
+    "category": "白噪音机",
+    "price": 158.0,
+    "rating": 4.6,
+    "review_count": 1500,
+    "image_url": "https://via.placeholder.com/150?text=White+Noise",
+    "features": ["20种自然音", "定时关闭", "小夜灯"],
+    "pros": ["音质清晰", "小巧便携", "操作简单"],
+    "cons": ["电池续航一般", "最高音量不够大"],
+    "recommendation_reason": "为了解决环境噪音干扰，这款白噪音机内置多种自然音效，能有效掩盖突发噪音，帮助您更快入睡。"
+  },
+  {
+    "id": "p3",
+    "name": "人体工学记忆棉枕头",
+    "category": "记忆棉枕头",
+    "price": 199.0,
+    "rating": 4.7,
+    "review_count": 3200,
+    "image_url": "https://via.placeholder.com/150?text=Pillow",
+    "features": ["慢回弹", "护颈设计", "防螨面料"],
+    "pros": ["支撑性好", "改善颈椎痛", "无异味"],
+    "cons": ["夏天略热", "高度不可调"],
+    "recommendation_reason": "针对颈椎不适导致的失眠，记忆棉材质能完美贴合颈部曲线，提供恰到好处的支撑，减少翻身次数。"
+  },
+  {
+    "id": "p4",
+    "name": "全遮光隔音窗帘",
+    "category": "遮光窗帘",
+    "price": 250.0,
+    "rating": 4.5,
+    "review_count": 800,
+    "image_url": "https://via.placeholder.com/150?text=Curtain",
+    "features": ["物理遮光", "隔热保温", "降噪"],
+    "pros": ["遮光效果极佳", "质感厚实", "颜色多样"],
+    "cons": ["安装较麻烦", "初次清洗有浮毛"],
+    "recommendation_reason": "如果您居住在临街或光线强的环境，这款窗帘能从源头阻断光线和部分噪音，营造完美的睡眠暗室环境。"
+  },
+  {
+    "id": "p5",
+    "name": "乳胶透气床垫 (薄款)",
+    "category": "乳胶床垫",
+    "price": 699.0,
+    "rating": 4.9,
+    "review_count": 500,
+    "image_url": "https://via.placeholder.com/150?text=Mattress",
+    "features": ["天然乳胶", "防螨抑菌", "蜂窝透气"],
+    "pros": ["回弹极快", "透气性好", "静音抗扰"],
+    "cons": ["价格稍高", "不能暴晒"],
+    "recommendation_reason": "改善睡眠舒适度的根本解决方案，天然乳胶具有极佳的透气性和支撑力，能有效缓解身体疲劳。"
+  }
+]

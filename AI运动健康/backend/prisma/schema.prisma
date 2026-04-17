@@ -1,0 +1,407 @@
+// Prisma Schema for AI Fitness Coach
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ==================== 用户相关 ====================
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  phone     String?  @unique
+  password  String
+  nickname  String?
+  avatar    String?
+
+  // 用户资料
+  profile   UserProfile?
+
+  // 订阅信息
+  subscription Subscription?
+
+  // 关联数据
+  mealRecords       MealRecord[]
+  menuPlans         MenuPlan[]
+  weightRecords     WeightRecord[]
+  workoutRecords    WorkoutRecord[]
+  waterRecords      WaterRecord[]
+  achievements      UserAchievement[]
+  chatMessages      ChatMessage[]
+  checkIns          DailyCheckIn[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model UserProfile {
+  id             String   @id @default(uuid())
+  userId         String   @unique
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // 基本信息
+  gender         Gender   @default(MALE)
+  birthDate      DateTime?
+  height         Float?   // cm
+  weight         Float?   // kg
+  targetWeight   Float?   // kg
+
+  // 目标设定
+  fitnessGoal    FitnessGoal @default(MAINTAIN)
+  activityLevel  ActivityLevel @default(MODERATE)
+
+  // 偏好设置
+  tastePreference TastePreference[]
+  allergies      String[]  // 过敏源列表
+  dislikedFoods  String[]  // 不喜欢的食物
+
+  // 营养目标 (每日)
+  targetCalories      Int?  @default(2000)
+  targetProtein       Float? @default(100)  // g
+  targetCarbs         Float? @default(250)  // g
+  targetFat           Float? @default(70)   // g
+  targetWater         Int?   @default(2000) // ml
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("user_profiles")
+}
+
+model Subscription {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  plan      SubscriptionPlan @default(FREE)
+  status    SubscriptionStatus @default(ACTIVE)
+
+  startDate DateTime @default(now())
+  endDate   DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("subscriptions")
+}
+
+// ==================== 饮食记录 ====================
+
+model MealRecord {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  mealType  MealType
+  imageUrl  String?
+  notes     String?
+
+  // AI识别结果
+  identifiedFoods  Json  // [{name, weight, confidence, nutrition}]
+  totalCalories    Float @default(0)
+  protein          Float @default(0)
+  carbs            Float @default(0)
+  fat              Float @default(0)
+  fiber            Float @default(0)
+
+  mealDate DateTime @default(now())
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, mealDate])
+  @@map("meal_records")
+}
+
+// ==================== 菜单计划 ====================
+
+model MenuPlan {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  name      String
+  startDate DateTime
+  endDate   DateTime
+
+  // 计划内容
+  meals     Json  // 每日菜单安排
+
+  // 生成参数
+  preferences Json  // 生成时使用的偏好设置
+
+  isActive   Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([userId, startDate])
+  @@map("menu_plans")
+}
+
+// ==================== 体重记录 ====================
+
+model WeightRecord {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  weight    Float    // kg
+  bodyFat   Float?   // 体脂率
+  notes     String?
+
+  recordDate DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, recordDate])
+  @@map("weight_records")
+}
+
+// ==================== 运动记录 ====================
+
+model WorkoutRecord {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  workoutType String
+  duration     Int    // 分钟
+  caloriesBurned Float?
+
+  notes     String?
+
+  workoutDate DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, workoutDate])
+  @@map("workout_records")
+}
+
+// ==================== 饮水记录 ====================
+
+model WaterRecord {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  amount    Int      // ml
+
+  recordDate DateTime @default(now())
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, recordDate])
+  @@map("water_records")
+}
+
+// ==================== 每日签到 ====================
+
+model DailyCheckIn {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  checkInDate DateTime @default(now())
+  streakCount Int     @default(1)
+
+  // 当日完成状态
+  mealsLogged    Int    @default(0)
+  workoutDone    Boolean @default(false)
+  waterGoalMet   Boolean @default(false)
+
+  createdAt DateTime @default(now())
+
+  @@unique([userId, checkInDate])
+  @@index([userId, checkInDate])
+  @@map("daily_check_ins")
+}
+
+// ==================== 成就系统 ====================
+
+model Achievement {
+  id          String   @id @default(uuid())
+  name        String
+  description String
+  icon        String
+  category    AchievementCategory
+
+  condition   Json  // 触发条件
+
+  createdAt DateTime @default(now())
+
+  @@map("achievements")
+}
+
+model UserAchievement {
+  id            String   @id @default(uuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  achievementId String
+  achievement   Achievement @relation(fields: [achievementId], references: [id], onDelete: Cascade)
+
+  unlockedAt    DateTime @default(now())
+
+  @@unique([userId, achievementId])
+  @@index([userId])
+  @@map("user_achievements")
+}
+
+// ==================== 聊天记录 ====================
+
+model ChatMessage {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  role      ChatRole
+  content   String
+
+  metadata  Json?  // 额外信息
+
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@map("chat_messages")
+}
+
+// ==================== 食物营养数据库 ====================
+
+model Food {
+  id          String   @id @default(uuid())
+  name        String
+  nameEn      String?
+  category    String
+
+  // 每100g营养成分
+  calories    Float
+  protein     Float
+  carbs       Float
+  fat         Float
+  fiber       Float?
+
+  // 食用单位
+  servingUnit String?  // 如 "个"、"片"
+  servingSize Float?   // 每份的克数
+
+  tags        String[] // 标签: [素食,低脂,高蛋白等]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@map("foods")
+}
+
+// ==================== 菜谱库 ====================
+
+model Recipe {
+  id          String   @id @default(uuid())
+  name        String
+  description String?
+
+  imageUrl    String?
+
+  // 营养信息 (每份)
+  calories    Float
+  protein     Float
+  carbs       Float
+  fat         Float
+
+  // 配料和步骤
+  ingredients Json  // [{foodId, name, amount, unit}]
+  steps       Json  // [步骤1, 步骤2, ...]
+
+  // 属性标签
+  taste       TastePreference[]
+  difficulty  Int    @default(1) // 1-5
+  prepTime    Int    // 分钟
+  cookTime    Int    // 分钟
+
+  servings    Int    @default(1)
+
+  // 标签
+  tags        String[] // [减脂,增肌,快手菜,等]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([name])
+  @@map("recipes")
+}
+
+// ==================== 枚举定义 ====================
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum FitnessGoal {
+  LOSE_WEIGHT    // 减脂
+  GAIN_MUSCLE    // 增肌
+  MAINTAIN       // 保持
+  IMPROVE_HEALTH // 改善健康
+}
+
+enum ActivityLevel {
+  SEDENTARY    // 久坐不动
+  LIGHT        // 轻度活动
+  MODERATE     // 中度活动
+  ACTIVE       // 活跃
+  VERY_ACTIVE  // 非常活跃
+}
+
+enum SubscriptionPlan {
+  FREE
+  MONTHLY
+  YEARLY
+  LIFETIME
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  EXPIRED
+  PENDING
+}
+
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+  SNACK
+}
+
+enum TastePreference {
+  SPICY    // 辣
+  SWEET    // 甜
+  SALTY    // 咸
+  LIGHT    // 清淡
+  SOUR     // 酸
+  BITTER   // 苦
+}
+
+enum AchievementCategory {
+  CHECK_IN    // 连续打卡
+  WORKOUT     // 运动相关
+  NUTRITION   // 营养相关
+  WEIGHT      // 体重目标
+  SOCIAL      // 社交相关
+}
+
+enum ChatRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}

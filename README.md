@@ -1,153 +1,117 @@
-# AI Innovative Application Design
+# AI Innovative App Design 💡
 
-A comprehensive design system and methodology for creating innovative AI-powered applications.
+[![Last commit](https://img.shields.io/github/last-commit/shengdabai/ai-innovative-app-design)](https://github.com/shengdabai/ai-innovative-app-design/commits)
+[![Stars](https://img.shields.io/github/stars/shengdabai/ai-innovative-app-design?style=social)](https://github.com/shengdabai/ai-innovative-app-design/stargazers)
+[![Follow @shengdabai](https://img.shields.io/github/followers/shengdabai?style=social)](https://github.com/shengdabai)
 
-## Description
+**English | [中文](#中文)**
 
-AI Innovative Application Design is a systematic approach to designing cutting-edge AI applications that leverage the latest artificial intelligence technologies to solve real-world problems. This project provides design principles, patterns, and implementation guidelines for creating innovative AI solutions.
+> Three AI product concepts, each backed by a real, runnable prototype — fashion try-on, a personal health coach, and a need-first shopping guide. Building in public.
 
-## Core Features
+## Why this repo exists
 
-- **Design Framework**: Comprehensive methodology for AI application design
-- **Pattern Library**: Reusable design patterns for common AI use cases
-- **Implementation Guide**: Step-by-step guidance for building AI applications
-- **Case Studies**: Real-world examples of successful AI applications
-- **Tools & Resources**: Collection of tools and resources for AI development
+I'm a full-time Chinese-language teacher (6,000+ students) who builds AI tools in public. This repo is my sandbox for **AI-native product ideas**: instead of stopping at slides, each concept ships with a working full-stack skeleton you can clone, read, and run. It's where a design doc and a prototype live side by side, so the idea and the code keep each other honest.
 
-## Technology Stack
+## What's inside
 
-- Design Tools: Figma, Adobe XD
-- Prototyping: ProtoPie, Framer
-- Development: React, Vue.js, Node.js
-- AI Integration: OpenAI API, TensorFlow, PyTorch
-- Cloud Services: AWS, Google Cloud, Azure
+This is **not** a finished product or a published app store release. It's a set of **concept-stage prototypes** — each one pairs a product/technical design with a working code skeleton (real backends, real frontends, mock AI services where keys aren't wired up yet). Treat it as reference architecture and idea fuel, not production software.
 
-## Getting Started
+## ✨ Concepts
 
-### Prerequisites
+| App | The idea | What's built | Stack |
+| --- | --- | --- | --- |
+| 👗 **AI Outfit Assistant** (`AI情绪运动教练/ai-outfit-assistant`) | Virtual try-on + outfit suggestions powered by AIGC | Next.js 16 frontend + FastAPI backend with auth & a mock try-on service | Next.js 16, React 19, Tailwind 4, FastAPI |
+| 🏃 **AI Smart Fitness Coach** (`AI运动健康`) | Private-coach-grade health management: diet monitoring → smart menus → data loop | Most complete app — NestJS backend (auth, diet, menu, analytics, chat, achievements), Expo RN app, Prisma schema, Docker Compose, API & deploy docs | NestJS, Prisma, PostgreSQL, Redis, Expo/React Native |
+| 🛒 **AI Need-First Shopping Guide** (`AI需求购物导购`) | "Need-first, not product-first" — multi-turn dialogue to surface the real need before recommending anything | Detailed tech-design doc + FastAPI need-analysis & product-matching services + HTML frontend | FastAPI, Python, HTML |
 
-- Basic knowledge of AI/ML concepts
-- Familiarity with modern web development
-- Design thinking skills
+> Heads-up on naming: the `AI情绪运动教练` folder currently holds the **outfit / try-on** app — the directory label is legacy and being tidied up.
 
-### Installation
+## 🧱 Format & tech
 
-```bash
-# Clone the repository
-git clone https://github.com/shengdabai/ai-innovative-app-design.git
-cd ai-innovative-app-design
+- **Code**: TypeScript / JavaScript (NestJS, Next.js, Expo) and Python (FastAPI).
+- **AI integration points**: GPT-style dialogue, image recognition, recommendation scoring — wired as real service boundaries with mock implementations where API keys aren't included.
+- **Docs**: each concept ships its own README; the shopping guide includes architecture diagrams, a 5-stage interaction flow, scoring formulas, and data models.
 
-# Install dependencies
-npm install
+## 🚀 How to read / use the docs
 
-# Run development server
-npm run dev
-```
+1. Pick a concept folder above and open its `README.md` for the product thinking.
+2. For the **Fitness Coach**, see `AI运动健康/docs/` for `API.md` and `DEPLOYMENT.md`.
+3. To run a prototype, follow the per-app quick-start (e.g. `npm run start:dev` for the NestJS backend, `next dev` for the Next.js frontend, `uvicorn` for the FastAPI services). Provide your own AI API keys to swap mocks for live calls.
 
-## Project Structure
+## 🗺️ Status
 
-```
-ai-innovative-app-design/
-├── src/
-│   ├── components/          # Design components
-│   ├── patterns/           # Design patterns
-│   ├── guidelines/         # Design guidelines
-│   └── examples/           # Implementation examples
-├── docs/                   # Documentation
-├── tools/                  # Design and development tools
-└── assets/                 # Design assets and resources
-```
+**Concept stage.** These are prototypes and design docs, not shipped products. The Fitness Coach is the most fleshed-out; the Shopping Guide is design-doc-led with working core services; the Outfit Assistant is an early scaffold. Expect rough edges, mock services, and active iteration.
 
-## Design Principles
+## 🤝 Connect / About
 
-1. **User-Centric Design**: Focus on solving real user problems
-2. **AI Integration**: Seamlessly integrate AI capabilities
-3. **Performance First**: Optimize for speed and efficiency
-4. **Scalability**: Design for future growth and expansion
-5. **Ethical AI**: Ensure responsible and ethical AI usage
+Built by **Tony (Sheng)** — a Chinese teacher turning teaching and product ideas into AI tools, in public.
 
-## Contributing
+If any of these concepts spark something, **⭐ Star this repo and [Follow @shengdabai](https://github.com/shengdabai)** to follow along as they evolve.
 
-Contributions are welcome! Please feel free to submit issues and pull requests.
+Related work you might like:
+- [chinese-learning-app](https://github.com/shengdabai/chinese-learning-app) — LinguaLens: AI Chinese tutor, snap a photo to learn words.
+- [smart-recipe-recommender](https://github.com/shengdabai/smart-recipe-recommender) — tell it what's in your fridge, get an AI-planned daily menu.
+- [Tony-Claude-Code-Skills](https://github.com/shengdabai/Tony-Claude-Code-Skills) — 320+ curated Claude Code skills, agents & commands.
 
 ## License
 
-MIT License
+MIT.
 
 ---
 
-# AI创新应用设计
+<a name="中文"></a>
 
-一个用于创建创新AI应用的综合性设计系统和方法论。
+# AI 创新应用设计 💡
 
-## 描述
+**[English](#ai-innovative-app-design-) | 中文**
 
-AI创新应用设计是一种系统化的方法，用于设计尖端的AI应用，利用最新的人工智能技术解决现实世界的问题。这个项目提供了设计原则、模式和实现指南，以创建创新的AI解决方案。
+> 三个 AI 产品概念，每个都配有真实可运行的原型——虚拟试穿、个人健康教练、需求优先购物向导。在公开中构建。
 
-## 核心功能
+## 为什么有这个仓库
 
-- **设计框架**：AI应用设计的综合方法论
-- **模式库**：常见AI用例的可重用设计模式
-- **实现指南**：构建AI应用的分步指导
-- **案例研究**：成功AI应用的真实世界案例
-- **工具与资源**：AI开发工具和资源集合
+我是一名全职中文老师（6000+ 学员），习惯在公开场合构建 AI 工具。这个仓库是我打磨 **AI 原生产品想法** 的试验田：不止步于 PPT，每个概念都附带一套可克隆、可阅读、可运行的全栈骨架。设计文档与原型并排存在，让想法和代码互相校验。
 
-## 技术栈
+## 这里有什么
 
-- 设计工具：Figma、Adobe XD
-- 原型设计：ProtoPie、Framer
-- 开发框架：React、Vue.js、Node.js
-- AI集成：OpenAI API、TensorFlow、PyTorch
-- 云服务：AWS、Google Cloud、Azure
+这 **不是** 已完成的产品或上线应用，而是一组 **概念阶段的原型**——每个都把产品/技术设计与可运行的代码骨架配对（真实的后端、真实的前端，未接入密钥处用 mock AI 服务）。请把它当作参考架构和灵感来源，而非生产级软件。
 
-## 快速开始
+## ✨ 概念清单
 
-### 前置要求
+| 应用 | 核心想法 | 已实现 | 技术栈 |
+| --- | --- | --- | --- |
+| 👗 **AI 试穿助手** (`AI情绪运动教练/ai-outfit-assistant`) | AIGC 驱动的虚拟试穿 + 穿搭建议 | Next.js 16 前端 + FastAPI 后端（含鉴权与 mock 试穿服务） | Next.js 16, React 19, Tailwind 4, FastAPI |
+| 🏃 **AI 智能私教** (`AI运动健康`) | 私教级健康管理：饮食监管 → 智能菜单 → 数据闭环 | 最完整——NestJS 后端（鉴权/饮食/菜单/分析/对话/成就）、Expo RN 应用、Prisma Schema、Docker Compose、API 与部署文档 | NestJS, Prisma, PostgreSQL, Redis, Expo/React Native |
+| 🛒 **AI 需求优先购物向导** (`AI需求购物导购`) | "需求优先，而非商品优先"——多轮对话先挖出真实需求，再推荐 | 详细技术方案文档 + FastAPI 需求分析与商品匹配服务 + HTML 前端 | FastAPI, Python, HTML |
 
-- 基本的AI/ML概念知识
-- 现代Web开发熟悉度
-- 设计思维技能
+> 命名说明：`AI情绪运动教练` 目录当前装的其实是 **试穿 / outfit** 应用——目录名是历史遗留，正在整理。
 
-### 安装
+## 🧱 形态与技术
 
-```bash
-# 克隆仓库
-git clone https://github.com/shengdabai/ai-innovative-app-design.git
-cd ai-innovative-app-design
+- **代码**：TypeScript / JavaScript（NestJS、Next.js、Expo）与 Python（FastAPI）。
+- **AI 集成点**：GPT 式对话、图像识别、推荐打分——以真实服务边界接入，未含密钥处用 mock 实现。
+- **文档**：每个概念都有独立 README；购物向导附带架构图、五阶段交互流程、打分公式和数据模型。
 
-# 安装依赖
-npm install
+## 🚀 如何阅读 / 使用文档
 
-# 运行开发服务器
-npm run dev
-```
+1. 选上面任一概念文件夹，打开其 `README.md` 看产品思路。
+2. **智能私教** 的接口与部署见 `AI运动健康/docs/` 下的 `API.md` 与 `DEPLOYMENT.md`。
+3. 运行原型请按各应用的快速开始（如 NestJS 后端 `npm run start:dev`、Next.js 前端 `next dev`、FastAPI 服务用 `uvicorn`）。提供你自己的 AI API 密钥即可把 mock 换成实际调用。
 
-## 项目结构
+## 🗺️ 状态
 
-```
-ai-innovative-app-design/
-├── src/
-│   ├── components/          # 设计组件
-│   ├── patterns/           # 设计模式
-│   ├── guidelines/         # 设计指南
-│   └── examples/           # 实现示例
-├── docs/                   # 文档
-├── tools/                  # 设计和开发工具
-└── assets/                 # 设计资源和资产
-```
+**概念阶段。** 这些是原型与设计文档，不是已上线产品。智能私教最完整；购物向导以设计文档为主、核心服务可跑；试穿助手是早期脚手架。请预期有粗糙之处、mock 服务和持续迭代。
 
-## 设计原则
+## 🤝 联系 / 关于
 
-1. **用户中心设计**：专注于解决真实的用户问题
-2. **AI集成**：无缝集成AI能力
-3. **性能优先**：优化速度和效率
-4. **可扩展性**：为未来的增长和扩展设计
-5. **道德AI**：确保负责任和合乎道德的AI使用
+由 **Tony（盛）** 构建——一名把教学与产品想法变成 AI 工具的中文老师，全程公开。
 
-## 贡献
+如果这些概念给了你启发，欢迎 **⭐ Star 本仓库并 [关注 @shengdabai](https://github.com/shengdabai)**，跟进它们的演进。
 
-欢迎贡献！请随时提交问题和拉取请求。
+你可能也会喜欢：
+- [chinese-learning-app](https://github.com/shengdabai/chinese-learning-app) —— LinguaLens：AI 中文助教，拍照即学词。
+- [smart-recipe-recommender](https://github.com/shengdabai/smart-recipe-recommender) —— 报上冰箱里有什么，给你 AI 规划的每日菜单。
+- [Tony-Claude-Code-Skills](https://github.com/shengdabai/Tony-Claude-Code-Skills) —— 320+ 精选 Claude Code skills、agents 与命令。
 
 ## 许可证
 
-MIT 许可证
+MIT。

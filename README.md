@@ -4,25 +4,25 @@ Three AI product concepts with runnable prototypes: virtual outfit try-on, a per
 
 ## Business Context
 
-- **Category:** data asset
-- **Audience:** developers, teachers, and researchers who need structured source material they can inspect and reuse.
+- **Category:** security and governance tool
+- **Audience:** builders and operators who need safer repositories, cleaner handoffs, and repeatable security checks.
 - **Repository status:** Public repository. Keep examples, docs, and issues free of credentials, private data, and machine-specific paths.
 - **Topics:** ai, app-design, concepts, fastapi, nestjs, nextjs, product-design, prototype
 
 ## What This Project Is For
 
 - Three AI product concepts with runnable prototypes: virtual outfit try-on, a personal health coach, and a need-first shopping guide.
-- Expose useful structured material in a format that can be inspected and reused.
-- Make provenance and transformation steps easier to review.
+- Find repository risks early without exposing secrets in reports.
+- Make security review repeatable across public and private codebases.
 
 ## Where It Fits
 
-This repository is primarily an asset base: structured files, transformation scripts, and documentation that other projects can build on.
+This repository belongs in the trust-and-safety layer of the workbench: it helps make code, configuration, and public handoffs safer before they are reused or shown to clients.
 
 ## Technical Overview
 
 - **Primary language:** TypeScript
-- **Detected stack:** TypeScript, Node.js / JavaScript tooling, Python dependencies, Docker, Docker Compose, Next.js, React, Tailwind CSS
+- **Detected stack:** TypeScript, Node.js, Python dependencies, Docker, Docker Compose, Next.js, React, Tailwind CSS, Expo
 - **Default branch:** `main`
 - **Visibility:** `PUBLIC`
 - **License:** MIT License
@@ -45,28 +45,29 @@ npm install
 npm run dev
 npm start
 npm run build
-npm run test
+npm run lint
 ```
 
 | Command | Purpose |
 |---|---|
+| `npm install` | Install project dependencies. |
 | `npm run dev` | next dev |
 | `npm start` | next start |
 | `npm run build` | next build |
-| `npm run test` | jest |
 | `npm run lint` | eslint |
+| `npm run test` | jest |
 
 ## Operating Notes
 
 - Keep real credentials out of the repository. Use local environment files, GitHub repository secrets, or the deployment platform secret manager.
 - If a `.env.example` file exists, treat it as documentation only; never commit filled-in `.env` files.
 - Before publishing screenshots, demos, or client examples, remove private names, internal paths, account IDs, and API endpoints.
-- The `Repository Hygiene` workflow is intended as a lightweight guardrail, not a replacement for product-specific tests.
+- The `Repository Hygiene` workflow is a lightweight guardrail, not a replacement for product-specific tests.
 
 ## Delivery Checklist
 
 - [ ] README describes the user, business outcome, and operating boundary.
-- [ ] Setup or preview commands are current.
+- [ ] Setup or preview commands are current and do not rely on private machine state.
 - [ ] No real secrets, private user data, or machine-local state are tracked.
 - [ ] Screenshots, demos, or sample outputs are safe to share publicly when the repository is public.
 - [ ] Product-specific tests or smoke checks are documented before production use.

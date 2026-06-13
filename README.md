@@ -4,20 +4,20 @@ Three AI product concepts with runnable prototypes: virtual outfit try-on, a per
 
 ## Business Context
 
-- **Category:** security and governance tool
-- **Audience:** builders and operators who need safer repositories, cleaner handoffs, and repeatable security checks.
+- **Category:** software project
+- **Audience:** builders and operators evaluating a focused software experiment.
 - **Repository status:** Public repository. Keep examples, docs, and issues free of credentials, private data, and machine-specific paths.
 - **Topics:** ai, app-design, concepts, fastapi, nestjs, nextjs, product-design, prototype
 
 ## What This Project Is For
 
 - Three AI product concepts with runnable prototypes: virtual outfit try-on, a personal health coach, and a need-first shopping guide.
-- Find repository risks early without exposing secrets in reports.
-- Make security review repeatable across public and private codebases.
+- Clarify the problem this project solves and who it is for.
+- Make setup, review, and iteration easier for future collaborators.
 
 ## Where It Fits
 
-This repository belongs in the trust-and-safety layer of the workbench: it helps make code, configuration, and public handoffs safer before they are reused or shown to clients.
+This repository captures a focused experiment or tool that can be evaluated, reused, or promoted into a productized workflow when it proves useful.
 
 ## Technical Overview
 

@@ -11,12 +11,20 @@ app = FastAPI(
     version="0.1.0"
 )
 
+import os
+
+# In production, set ALLOWED_ORIGINS env var to a comma-separated list of domains,
+# e.g. "https://your-domain.com,https://www.your-domain.com"
+# Defaults to localhost for local development only.
+_raw_origins = os.getenv("ALLOWED_ORIGINS", "http://localhost:3000,http://localhost:8080")
+_allowed_origins = [o.strip() for o in _raw_origins.split(",") if o.strip()]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allows all origins
+    allow_origins=_allowed_origins,
     allow_credentials=True,
-    allow_methods=["*"],  # Allows all methods
-    allow_headers=["*"],  # Allows all headers
+    allow_methods=["GET", "POST", "OPTIONS"],
+    allow_headers=["Content-Type", "Authorization"],
 )
 
 # Initialize services

@@ -7,6 +7,7 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  ForbiddenException,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { UsersService } from './users.service';
@@ -45,12 +46,11 @@ export class UsersController {
 
   @Put('subscription')
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: '更新订阅计划' })
-  async updateSubscription(
-    @CurrentUser('id') userId: string,
-    @Body('plan') plan: 'MONTHLY' | 'YEARLY' | 'LIFETIME',
-  ) {
-    return this.usersService.updateSubscription(userId, plan);
+  @ApiOperation({ summary: '订阅计划仅可由已验证的支付或后台流程更新' })
+  updateSubscription() {
+    throw new ForbiddenException(
+      '订阅权益只能由已验证的支付或后台流程更新',
+    );
   }
 
   @Delete('account')

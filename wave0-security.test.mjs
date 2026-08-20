@@ -21,7 +21,10 @@ test('production compose requires JWT secrets', async () => {
 test('outfit assistant JWT key comes from required settings', async () => {
   const config = await read('AI情绪运动教练/ai-outfit-assistant/backend/app/core/config.py');
   const security = await read('AI情绪运动教练/ai-outfit-assistant/backend/app/core/security.py');
+  const dependencies = await read('AI情绪运动教练/ai-outfit-assistant/backend/app/api/deps.py');
   assert.match(config, /^\s*SECRET_KEY: str\s*$/m);
   assert.match(security, /settings\.SECRET_KEY/);
+  assert.match(dependencies, /jwt\.decode\(token, settings\.SECRET_KEY/);
+  assert.doesNotMatch(dependencies, /security\.SECRET_KEY/);
   assert.doesNotMatch(security, /CHANGE_THIS_TO_A_SECURE_SECRET_KEY/);
 });

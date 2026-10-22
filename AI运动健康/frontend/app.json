@@ -16,7 +16,25 @@
     ],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.aifitness.app"
+      "bundleIdentifier": "com.aifitness.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "AI智能私教需要使用相机记录训练动作和食物照片，用于生成个性化健身与饮食建议。",
+        "NSPhotoLibraryUsageDescription": "AI智能私教需要访问相册，以便你选择训练或饮食图片进行分析。",
+        "NSFaceIDUsageDescription": "AI智能私教使用 Face ID 保护你的个人健康与训练记录。"
+      },
+      "privacyManifests": {
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "CA92.1"
+            ]
+          }
+        ],
+        "NSPrivacyCollectedDataTypes": [],
+        "NSPrivacyTracking": false,
+        "NSPrivacyTrackingDomains": []
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -29,7 +47,25 @@
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "AI智能私教需要使用相机记录训练动作和食物照片，用于生成个性化健身与饮食建议。"
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "AI智能私教需要访问相册，以便你选择训练或饮食图片进行分析。"
+        }
+      ],
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "AI智能私教使用 Face ID 保护你的个人健康与训练记录。"
+        }
+      ]
     ],
     "scheme": "ai-fitness",
     "experiments": {

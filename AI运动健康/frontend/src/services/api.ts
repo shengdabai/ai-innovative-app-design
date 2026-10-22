@@ -1,7 +1,15 @@
-import axios, { AxiosInstance } from 'axios';
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios';
 import * as SecureStore from 'expo-secure-store';
 
 const API_BASE_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:3000/api/v1';
+
+type ApiClientInstance = {
+  get<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
+  post<T = any>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
+  put<T = any>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
+  patch<T = any>(url: string, data?: unknown, config?: AxiosRequestConfig): Promise<T>;
+  delete<T = any>(url: string, config?: AxiosRequestConfig): Promise<T>;
+};
 
 class ApiClient {
   private client: AxiosInstance;
@@ -67,4 +75,4 @@ class ApiClient {
   }
 }
 
-export const apiClient = new ApiClient().instance;
+export const apiClient = new ApiClient().instance as ApiClientInstance;

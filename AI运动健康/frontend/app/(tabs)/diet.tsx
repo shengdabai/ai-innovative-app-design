@@ -4,7 +4,7 @@ import { router } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { dietService } from '@services';
 import { format } from 'date-fns';
-import { Camera, Plus } from 'lucide-react-native';
+import { Camera } from 'lucide-react-native';
 
 export default function DietScreen() {
   const today = format(new Date(), 'yyyy-MM-dd');

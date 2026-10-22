@@ -12,7 +12,6 @@ import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@store/store';
 import { authService, analyticsService } from '@services';
 import {
-  Settings,
   Crown,
   Award,
   Target,
@@ -30,6 +29,7 @@ export default function ProfileScreen() {
 
   const handleLogout = async () => {
     await authService.logout();
+    logout();
     router.replace('/auth');
   };
 

@@ -105,6 +105,3 @@ export const useAppStore = create<AppState>()(
     }
   )
 );
-
-// Redux-style store for complex state if needed
-export { useAuthStore, useProfileStore, useAppStore };

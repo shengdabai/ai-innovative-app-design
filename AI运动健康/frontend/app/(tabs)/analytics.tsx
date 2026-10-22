@@ -4,18 +4,28 @@ import { useQuery } from '@tanstack/react-query';
 import { analyticsService } from '@services';
 import { LineChart } from 'react-native-chart-kit';
 
+type WeightPoint = {
+  date: string;
+  weight: number;
+};
+
+type NutritionPoint = {
+  date: string;
+  calories: number;
+};
+
 export default function AnalyticsScreen() {
   const { data: dashboard } = useQuery({
     queryKey: ['dashboard'],
     queryFn: () => analyticsService.getDashboard(),
   });
 
-  const { data: weightChart } = useQuery({
+  const { data: weightChart } = useQuery<WeightPoint[]>({
     queryKey: ['weight-chart'],
     queryFn: () => analyticsService.getWeightChart(30),
   });
 
-  const { data: nutritionChart } = useQuery({
+  const { data: nutritionChart } = useQuery<NutritionPoint[]>({
     queryKey: ['nutrition-chart'],
     queryFn: () => analyticsService.getNutritionChart(30),
   });

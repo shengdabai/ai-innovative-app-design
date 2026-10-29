@@ -1,7 +1,7 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from typing import List, Optional, Dict, Any
+from pydantic import BaseModel, StringConstraints
+from typing import Annotated, List, Optional, Dict, Any
 from app.services.need_analysis import NeedAnalyzer
 from app.services.product_service import ProductService
 
@@ -32,7 +32,7 @@ product_service = ProductService()
 need_analyzer = NeedAnalyzer(product_service=product_service)
 
 class UserInput(BaseModel):
-    text: str
+    text: Annotated[str, StringConstraints(strip_whitespace=True, min_length=1, max_length=2000)]
     user_id: Optional[str] = "guest"
 
 class AnalysisResult(BaseModel):
@@ -53,10 +53,11 @@ async def analyze_need(input_data: UserInput):
     try:
         result = need_analyzer.analyze_user_need(input_data.text)
         return result
-    except Exception as e:
-        import traceback
-        traceback.print_exc()
-        raise HTTPException(status_code=500, detail=str(e))
+    except Exception:
+        # Exceptions may contain request text, internal paths, or upstream data.
+        raise HTTPException(
+            status_code=500, detail="Analysis service temporarily unavailable"
+        ) from None
 
 if __name__ == "__main__":
     import uvicorn

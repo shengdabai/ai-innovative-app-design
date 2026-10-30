@@ -1,9 +1,9 @@
 fastapi==0.109.0
 uvicorn[standard]==0.27.0
-pydantic==2.5.3
-pydantic-settings==2.1.0
-sqlalchemy==2.0.25
-asyncpg==0.29.0
+pydantic[email]==2.14.1
+pydantic-settings==2.16.0
+sqlalchemy[asyncio]==2.0.54
+asyncpg==0.30.0
 redis==5.0.1
 python-multipart==0.0.6
 httpx==0.26.0
@@ -14,4 +14,6 @@ accelerate>=0.25.0
 opencv-python-headless
 rembg
 passlib[bcrypt]==1.7.4
+# passlib 1.7.4 cannot hash with bcrypt 5 (its self-test raises ValueError)
+bcrypt==4.3.0
 python-jose[cryptography]==3.3.0

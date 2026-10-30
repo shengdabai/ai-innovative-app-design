@@ -3,7 +3,8 @@ import { PrismaService } from '../prisma/prisma.service';
 import { CreateMenuPlanDto } from './dto/create-menu-plan.dto';
 import { MealType, TastePreference } from '@prisma/client';
 
-interface MealSuggestion {
+// Type aliases (not interfaces) so the menu stays assignable to Prisma's JSON input type.
+type MealSuggestion = {
   recipeId: string;
   name: string;
   calories: number;
@@ -14,9 +15,9 @@ interface MealSuggestion {
   prepTime: number;
   cookTime: number;
   servings: number;
-}
+};
 
-interface DayMenu {
+type DayMenu = {
   date: string;
   breakfast: MealSuggestion[];
   lunch: MealSuggestion[];
@@ -26,7 +27,7 @@ interface DayMenu {
   totalProtein: number;
   totalCarbs: number;
   totalFat: number;
-}
+};
 
 @Injectable()
 export class MenuService {

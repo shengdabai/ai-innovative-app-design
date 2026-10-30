@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CacheModule } from '@nestjs/cache-manager';
-import { redisStore } from 'cache-manager-ioredis-yet';
+import KeyvRedis from '@keyv/redis';
 
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -29,13 +29,18 @@ import { HealthModule } from './modules/health/health.module';
     CacheModule.registerAsync({
       isGlobal: true,
       imports: [ConfigModule],
+      // cache-manager v7 uses Keyv stores; the Redis adapter connects on first use.
       useFactory: (configService: ConfigService) => ({
-        store: redisStore,
-        host: configService.get<string>('REDIS_HOST', 'localhost'),
-        port: configService.get<number>('REDIS_PORT', 6379),
-        password: configService.get<string>('REDIS_PASSWORD', ''),
-        ttl: 300 * 1000, // 5 minutes; cache-manager v5 counts ttl in milliseconds
-        max: 100,
+        stores: [
+          new KeyvRedis({
+            socket: {
+              host: configService.get<string>('REDIS_HOST', 'localhost'),
+              port: Number(configService.get('REDIS_PORT', 6379)),
+            },
+            password: configService.get<string>('REDIS_PASSWORD') || undefined,
+          }),
+        ],
+        ttl: 300 * 1000, // 5 minutes, in milliseconds
       }),
       inject: [ConfigService],
     }),

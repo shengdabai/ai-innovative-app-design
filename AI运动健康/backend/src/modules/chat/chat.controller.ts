@@ -4,6 +4,7 @@ import {
   Post,
   Delete,
   Body,
+  Query,
   UseGuards,
   ParseIntPipe,
 } from '@nestjs/common';

@@ -68,8 +68,8 @@ export class RecipesService {
     steps: string[];
     taste?: TastePreference[];
     difficulty?: number;
-    prepTime?: number;
-    cookTime?: number;
+    prepTime: number;
+    cookTime: number;
     servings?: number;
     tags?: string[];
   }) {

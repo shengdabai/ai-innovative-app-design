@@ -1,0 +1,53 @@
+name: Fitness Backend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'AI运动健康/backend/**'
+      - '.github/workflows/fitness-backend.yml'
+  pull_request:
+    paths:
+      - 'AI运动健康/backend/**'
+      - '.github/workflows/fitness-backend.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fitness-backend-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typecheck-and-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: AI运动健康/backend
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: AI运动健康/backend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Generate Prisma client
+        run: npx prisma generate
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npm test -- --ci

@@ -249,8 +249,9 @@ export class NutritionUtil {
   static assessNutritionBalance(
     consumed: { protein: number; carbs: number; fat: number },
     targets: { protein: number; carbs: number; fat: number },
-  ): { score: number; suggestions: string[] } {
+  ): { score: number; suggestions: string[]; strengths: string[] } {
     const suggestions: string[] = [];
+    const strengths: string[] = [];
     let score = 100;
 
     const proteinRatio = consumed.protein / targets.protein;
@@ -264,6 +265,8 @@ export class NutritionUtil {
     } else if (proteinRatio > 1.3) {
       suggestions.push('蛋白质摄入过多，注意肾脏负担');
       score -= 5;
+    } else {
+      strengths.push('蛋白质摄入达标');
     }
 
     // 碳水评估
@@ -273,6 +276,8 @@ export class NutritionUtil {
     } else if (carbsRatio > 1.4) {
       suggestions.push('碳水化合物偏高，建议减少精制糖摄入');
       score -= 10;
+    } else {
+      strengths.push('碳水化合物摄入适中');
     }
 
     // 脂肪评估
@@ -282,9 +287,11 @@ export class NutritionUtil {
     } else if (fatRatio > 1.3) {
       suggestions.push('脂肪摄入偏高，建议控制油脂用量');
       score -= 15;
+    } else {
+      strengths.push('脂肪摄入适中');
     }
 
-    return { score: Math.max(0, score), suggestions };
+    return { score: Math.max(0, score), suggestions, strengths };
   }
 
   /**

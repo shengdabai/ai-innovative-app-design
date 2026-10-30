@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Body,
+  Param,
   Query,
   UseGuards,
   ParseIntPipe,
@@ -32,7 +33,7 @@ export class FoodsController {
 
   @Get(':id')
   @ApiOperation({ summary: '获取食物详情' })
-  async getFood(@Query('id') id: string) {
+  async getFood(@Param('id') id: string) {
     return this.foodsService.getFood(id);
   }
 

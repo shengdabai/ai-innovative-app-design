@@ -8,9 +8,12 @@ import { RecipesController } from './recipes.controller';
 import { RecipesService } from './recipes.service';
 import { createControllerTestApp } from '../../common/testing/controller-test-app';
 
-describe('RecipesController query parameters', () => {
+describe('RecipesController request parameters', () => {
   let app: INestApplication;
-  const recipesService = { searchRecipes: jest.fn(async () => ({ items: [], total: 0 })) };
+  const recipesService = {
+    searchRecipes: jest.fn(async () => ({ items: [], total: 0 })),
+    getRecipe: jest.fn(async (id: string) => ({ id })),
+  };
 
   beforeAll(async () => {
     app = await createControllerTestApp(RecipesController, [{ provide: RecipesService, useValue: recipesService }]);
@@ -45,5 +48,17 @@ describe('RecipesController query parameters', () => {
   it('GET /recipes/search rejects a fractional page with 400', async () => {
     await request(app.getHttpServer()).get('/recipes/search?q=egg&page=1.5').expect(400);
     expect(recipesService.searchRecipes).not.toHaveBeenCalled();
+  });
+
+  it('GET /recipes/:id reads the id from the path', async () => {
+    const id = '0b7c2f8e-5d1a-4c3b-9e2f-1a2b3c4d5e6f';
+    const res = await request(app.getHttpServer()).get(`/recipes/${id}`).expect(200);
+    expect(recipesService.getRecipe).toHaveBeenCalledWith(id);
+    expect(res.body).toEqual({ id });
+  });
+
+  it('GET /recipes/:id ignores an id in the query string', async () => {
+    await request(app.getHttpServer()).get('/recipes/path-id?id=query-id').expect(200);
+    expect(recipesService.getRecipe).toHaveBeenCalledWith('path-id');
   });
 });

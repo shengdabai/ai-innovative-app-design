@@ -1,0 +1,53 @@
+name: Fitness Frontend
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'AI运动健康/frontend/**'
+      - '.github/workflows/fitness-frontend.yml'
+  pull_request:
+    paths:
+      - 'AI运动健康/frontend/**'
+      - '.github/workflows/fitness-frontend.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: fitness-frontend-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  typecheck-and-deps:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    defaults:
+      run:
+        working-directory: AI运动健康/frontend
+    env:
+      CI: 'true'
+      EXPO_NO_TELEMETRY: '1'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+        with:
+          persist-credentials: false
+
+      - name: Setup Node
+        uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: AI运动健康/frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci --no-audit --no-fund
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Check Expo SDK dependency versions
+        run: npx expo install --check

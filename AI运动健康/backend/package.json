@@ -46,13 +46,13 @@
     "cache-manager-ioredis-yet": "^2.1.2",
     "cache-manager": "^5.2.4",
     "axios": "^1.6.5",
-    "multer": "^1.4.5-lts.1",
+    "multer": "^2.3.0",
     "multer-s3": "^3.0.1",
     "@aws-sdk/client-s3": "^3.478.0",
-    "sharp": "^0.33.1",
+    "sharp": "^0.35.4",
     "openai": "^4.24.1",
     "@google-cloud/vision": "^4.2.0",
-    "uuid": "^9.0.1",
+    "uuid": "^11.1.1",
     "date-fns": "^3.2.0",
     "rxjs": "^7.8.1",
     "reflect-metadata": "^0.2.1",
@@ -105,5 +105,9 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "overrides": {
+    "multer": "^2.3.0",
+    "uuid": "^11.1.1"
   }
 }

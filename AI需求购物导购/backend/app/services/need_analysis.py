@@ -66,23 +66,24 @@ class NeedAnalyzer:
         if not info['symptoms']:
             info['symptoms'].append("潜在改善需求")
 
-        # 2. Extract Budget (Simple Regex for demo)
+        # Explicit upper bounds are intersected; ranges contribute their upper end.
         import re
-        # Match patterns like "200元以内", "预算300", "低于500"
-        budget_match = re.search(r'(?:预算|低于|以内)(\d+)', text)
-        if budget_match:
-            try:
-                info['budget_max'] = float(budget_match.group(1))
-            except ValueError:
-                pass
-        
-        # Match patterns like "100-300元" -> take max
-        range_match = re.search(r'(\d+)-(\d+)元', text)
-        if range_match:
-            try:
-                info['budget_max'] = float(range_match.group(2))
-            except ValueError:
-                pass
+        import math
+        number = r'(\d+(?:\.\d+)?)'
+        patterns = [
+            r'(?:预算|低于|不超过|以内)\s*[:：]?\s*[¥￥]?' + number + r'(?:\s*[-—~至]\s*[¥￥]?' + number + r')?',
+            r'(?<![\d.\-])[¥￥]?' + number + r'\s*元?\s*以内',
+            r'(?<![\d.\-])[¥￥]?' + number + r'\s*[-—~至]\s*[¥￥]?' + number + r'\s*元',
+        ]
+        limits = []
+        for pattern in patterns:
+            for match in re.finditer(pattern, text):
+                values = [float(value) for value in match.groups() if value is not None]
+                if not all(math.isfinite(value) for value in values):
+                    raise ValueError('Budget must be finite')
+                limits.append(max(values))
+        if limits:
+            info['budget_max'] = min(limits)
 
         return info
 

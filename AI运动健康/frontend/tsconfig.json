@@ -13,9 +13,11 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
+      "@services": ["src/services/index"],
       "@components/*": ["src/components/*"],
       "@screens/*": ["src/screens/*"],
       "@services/*": ["src/services/*"],
+      "@store": ["src/store/store"],
       "@store/*": ["src/store/*"],
       "@utils/*": ["src/utils/*"],
       "@types/*": ["src/types/*"],

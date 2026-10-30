@@ -9,10 +9,9 @@ import {
   TouchableOpacity,
   FlatList,
 } from 'react-native';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation } from '@tanstack/react-query';
 import { chatService } from '@services';
 import { Send, Bot } from 'lucide-react-native';
-import { useAuthStore } from '@store/store';
 
 interface Message {
   id: string;
@@ -23,8 +22,6 @@ interface Message {
 export default function ChatScreen() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
-  const queryClient = useQueryClient();
-  const { user } = useAuthStore();
 
   const { data: suggestions } = useQuery({
     queryKey: ['chat-suggestions'],

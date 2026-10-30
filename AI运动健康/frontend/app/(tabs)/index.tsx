@@ -1,5 +1,5 @@
-import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions } from 'react-native';
+import React from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Dimensions, Image } from 'react-native';
 import { router } from 'expo-router';
 import { useQuery } from '@tanstack/react-query';
 import { useAuthStore } from '@store/store';
@@ -16,6 +16,8 @@ import {
   Award,
   Plus,
   Camera,
+  UtensilsCrossed,
+  Dumbbell,
 } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');

@@ -3,7 +3,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
 import { CacheModule } from '@nestjs/cache-manager';
-import * as redisStore from 'cache-manager-ioredis';
+import { redisStore } from 'cache-manager-ioredis-yet';
 
 import { PrismaModule } from './modules/prisma/prisma.module';
 import { AuthModule } from './modules/auth/auth.module';
@@ -34,7 +34,7 @@ import { HealthModule } from './modules/health/health.module';
         host: configService.get<string>('REDIS_HOST', 'localhost'),
         port: configService.get<number>('REDIS_PORT', 6379),
         password: configService.get<string>('REDIS_PASSWORD', ''),
-        ttl: 300,
+        ttl: 300 * 1000, // 5 minutes; cache-manager v5 counts ttl in milliseconds
         max: 100,
       }),
       inject: [ConfigService],

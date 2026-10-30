@@ -83,7 +83,8 @@ describe('AchievementsService', () => {
 
     expect(result.newUnlocks).toBe(1);
     expect(created).toEqual([{ userId: 'user-1', achievementId: 'water' }]);
-    expect(prisma.waterRecord.findMany.mock.calls[0][0].where.userId).toBe('user-1');
+    const [waterQuery] = prisma.waterRecord.findMany.mock.calls[0] as any[];
+    expect(waterQuery.where.userId).toBe('user-1');
   });
 
   it('unlocks the nutrition achievement after 14 days within 90%-110% of target calories', async () => {

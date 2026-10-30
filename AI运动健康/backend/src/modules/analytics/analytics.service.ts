@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { NutritionUtil } from '../../common/utils/nutrition.util';
 
-interface DashboardData {
+export interface DashboardData {
   overview: {
     currentWeight: number | null;
     weightChange: number;

@@ -4,12 +4,12 @@ import { ConfigService } from '@nestjs/config';
 import { ChatRole } from '@prisma/client';
 import OpenAI from 'openai';
 
-interface ChatMessage {
+export interface ChatMessage {
   role: 'user' | 'assistant' | 'system';
   content: string;
 }
 
-interface ChatResponse {
+export interface ChatResponse {
   message: string;
   suggestions?: string[];
 }

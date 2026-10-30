@@ -38,24 +38,37 @@ This repository captures a focused experiment or tool that can be evaluated, reu
 
 ## Quick Start
 
-Use the commands that match the current project state:
+There is no root `package.json`. Run commands from the relevant subproject:
+
+| Subproject | Directory | Existing checks |
+|---|---|---|
+| Need-first shopping guide | `AI需求购物导购/backend` | `python3 test_logic.py` (two assertion scenarios); `python3 -m unittest discover -s . -p 'test_api.py' -v` (five offline unit tests; Pydantic 2 required) |
+| Shopping web page | `AI需求购物导购/frontend` | `node --test chat.test.cjs` (Node.js 18+; no dependencies) |
+| Fitness API | `AI运动健康/backend` | `npm run build`, `npm test -- --runInBand`, `npm run lint -- --no-fix` |
+| Fitness Expo app | `AI运动健康/frontend` | `npm test -- --runInBand`, `npm run lint` |
+| Outfit web app | `AI情绪运动教练/ai-outfit-assistant/frontend` | `npm run build`, `npm run lint` |
+
+The Node subprojects currently have no committed lockfiles. A reproducible dependency install and the Node build/lint/Jest checks remain unverified until a compatible lockfile is supplied. None of the Node packages defines a `typecheck` script. The shopping page tests use Node's built-in test runner and can run without installing dependencies.
+
+For a local shopping demo, with the Python requirements already installed, run these in separate terminals from the repository root:
 
 ```bash
-npm install
-npm run dev
-npm start
-npm run build
-npm run lint
+cd AI需求购物导购/backend
+python3 -m uvicorn app.main:app --host 127.0.0.1 --port 8000
 ```
 
-| Command | Purpose |
-|---|---|
-| `npm install` | Install project dependencies. |
-| `npm run dev` | next dev |
-| `npm start` | next start |
-| `npm run build` | next build |
-| `npm run lint` | eslint |
-| `npm run test` | jest |
+```bash
+cd AI需求购物导购/frontend
+python3 -m http.server 8080 --bind 127.0.0.1
+```
+
+Open `http://localhost:8080`. The page calls `http://localhost:8000/api/analyze`; port 8080 is included in the API's default local CORS origins. The shopping analyzer uses local keyword rules and a sample product catalogue, not a live AI model or live shopping data. The dependency-free tests do not verify browser layout, CORS, or a running API.
+
+The shopping API trims input and accepts 1–2000 characters. The page keeps oversized drafts for editing, displays a validation message, and cancels requests after 15 seconds, including stalled response bodies. Concurrent replies stay beside their questions. Internal exception details are neither returned by the API handler nor printed by the page.
+
+The backend unit tests replace FastAPI's decorators and exception class and mock the analyzer. They exercise the real Pydantic input model and route function without a server or external services. They do **not** verify ASGI routing, HTTP validation responses, CORS, or response serialization; those require an installed FastAPI environment. The frontend tests use a small DOM and timer fixture; screen-reader announcements, keyboard operation, and desktop/mobile rendering still need browser verification.
+
+See the [fitness guide](AI运动健康/README.md) and [outfit guide](AI情绪运动教练/ai-outfit-assistant/README.md) for their separate runtime requirements. These are concept prototypes; the presence of routes or UI does not establish working authentication, model inference, or production readiness.
 
 ## Operating Notes
 

@@ -119,7 +119,7 @@ docker-compose up
 
 ## API文档
 
-API文档请查看：[docs/api.md](docs/api.md)
+API文档请查看：[docs/API.md](docs/API.md)
 
 ## 许可证
 

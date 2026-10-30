@@ -7,6 +7,7 @@ import {
   Query,
   UseGuards,
   ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { ChatService } from './chat.service';
@@ -33,7 +34,7 @@ export class ChatController {
   @ApiOperation({ summary: '获取聊天历史' })
   async getChatHistory(
     @CurrentUser('id') userId: string,
-    @Query('limit', ParseIntPipe) limit: number = 50,
+    @Query('limit', new DefaultValuePipe(50), ParseIntPipe) limit: number,
   ) {
     return this.chatService.getChatHistory(userId, limit);
   }

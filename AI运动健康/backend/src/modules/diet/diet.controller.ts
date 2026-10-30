@@ -11,6 +11,7 @@ import {
   UseInterceptors,
   UploadedFile,
   ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiConsumes, ApiBody } from '@nestjs/swagger';
@@ -42,11 +43,11 @@ export class DietController {
   @ApiOperation({ summary: '获取饮食记录列表' })
   async getMealRecords(
     @CurrentUser('id') userId: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
     @Query('startDate') startDate?: string,
     @Query('endDate') endDate?: string,
     @Query('mealType') mealType?: string,
-    @Query('page', ParseIntPipe) page: number = 1,
-    @Query('limit', ParseIntPipe) limit: number = 20,
   ) {
     return this.dietService.getMealRecords(userId, {
       startDate: startDate ? new Date(startDate) : undefined,
@@ -104,7 +105,7 @@ export class DietController {
   @ApiOperation({ summary: '获取饮食趋势分析' })
   async getDietTrends(
     @CurrentUser('id') userId: string,
-    @Query('days', ParseIntPipe) days: number = 30,
+    @Query('days', new DefaultValuePipe(30), ParseIntPipe) days: number,
   ) {
     return this.dietService.getDietTrends(userId, days);
   }

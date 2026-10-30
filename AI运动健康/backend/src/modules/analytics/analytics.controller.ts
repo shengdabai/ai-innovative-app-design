@@ -6,6 +6,7 @@ import {
   Query,
   UseGuards,
   ParseIntPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { AnalyticsService } from './analytics.service';
@@ -29,7 +30,7 @@ export class AnalyticsController {
   @ApiOperation({ summary: '获取体重趋势图表' })
   async getWeightChart(
     @CurrentUser('id') userId: string,
-    @Query('days', ParseIntPipe) days: number = 30,
+    @Query('days', new DefaultValuePipe(30), ParseIntPipe) days: number,
   ) {
     return this.analyticsService.getWeightChart(userId, days);
   }
@@ -38,7 +39,7 @@ export class AnalyticsController {
   @ApiOperation({ summary: '获取营养摄入图表' })
   async getNutritionChart(
     @CurrentUser('id') userId: string,
-    @Query('days', ParseIntPipe) days: number = 30,
+    @Query('days', new DefaultValuePipe(30), ParseIntPipe) days: number,
   ) {
     return this.analyticsService.getNutritionChart(userId, days);
   }
@@ -58,7 +59,7 @@ export class AnalyticsController {
   @ApiOperation({ summary: '获取体重记录' })
   async getWeightRecords(
     @CurrentUser('id') userId: string,
-    @Query('limit', ParseIntPipe) limit: number = 30,
+    @Query('limit', new DefaultValuePipe(30), ParseIntPipe) limit: number,
   ) {
     return this.analyticsService.getWeightRecords(userId, limit);
   }

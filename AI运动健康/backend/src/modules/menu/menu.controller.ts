@@ -9,6 +9,9 @@ import {
   UseGuards,
   HttpCode,
   HttpStatus,
+  ParseIntPipe,
+  ParseFloatPipe,
+  DefaultValuePipe,
 } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { MenuService } from './menu.service';
@@ -68,9 +71,16 @@ export class MenuController {
   async searchRecipes(
     @Query('q') query: string,
     @Query('taste') taste?: string,
-    @Query('maxCalories') maxCalories?: number,
-    @Query('minProtein') minProtein?: number,
-    @Query('difficulty') difficulty?: number,
+    // These filters have no default. DefaultValuePipe(undefined) turns the NaN
+    // that the global ValidationPipe produces for an omitted or non-numeric
+    // value back into undefined, so the filter is skipped instead of receiving NaN.
+    // calories and protein are Float columns, difficulty is an Int column.
+    @Query('maxCalories', new DefaultValuePipe(undefined), new ParseFloatPipe({ optional: true }))
+    maxCalories?: number,
+    @Query('minProtein', new DefaultValuePipe(undefined), new ParseFloatPipe({ optional: true }))
+    minProtein?: number,
+    @Query('difficulty', new DefaultValuePipe(undefined), new ParseIntPipe({ optional: true }))
+    difficulty?: number,
   ) {
     return this.menuService.searchRecipes(query, {
       taste: taste ? taste.split(',') as any : undefined,

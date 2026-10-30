@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Query,
+  UseGuards,
+  ParseIntPipe,
+  DefaultValuePipe,
+} from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
 import { RecipesService } from './recipes.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
@@ -12,8 +21,8 @@ export class RecipesController {
   @ApiOperation({ summary: '搜索菜谱' })
   async searchRecipes(
     @Query('q') query: string,
-    @Query('page') page: number = 1,
-    @Query('limit') limit: number = 20,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(20), ParseIntPipe) limit: number,
   ) {
     return this.recipesService.searchRecipes(query, page, limit);
   }

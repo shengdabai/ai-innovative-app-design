@@ -1,6 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { AchievementCategory } from '@prisma/client';
+import {
+  AchievementUserData,
+  DEFAULT_TARGET_CALORIES,
+  DEFAULT_TARGET_WATER_ML,
+  GOAL_STREAK_LOOKBACK_DAYS,
+  achievementProgress,
+  countConsecutiveGoalDays,
+  isConditionMet,
+  isNutritionGoalMet,
+  isWaterGoalMet,
+  sumByLocalDay,
+} from './achievement-progress';
 
 /**
  * 成就系统服务
@@ -151,18 +163,20 @@ export class AchievementsService {
     // 获取所有成就以标记哪些已解锁
     const allAchievements = await this.prisma.achievement.findMany();
     const unlockedIds = new Set(unlocked.map((ua) => ua.achievementId));
+    const lockedAchievements = allAchievements.filter((a) => !unlockedIds.has(a.id));
+    const userData = lockedAchievements.length
+      ? await this.getUserDataForAchievements(userId)
+      : null;
 
     return {
       unlocked: unlocked.map((ua) => ({
         ...ua.achievement,
         unlockedAt: ua.unlockedAt,
       })),
-      locked: allAchievements
-        .filter((a) => !unlockedIds.has(a.id))
-        .map((a) => ({
-          ...a,
-          progress: 0, // TODO: 计算进度
-        })),
+      locked: lockedAchievements.map((a) => ({
+        ...a,
+        progress: achievementProgress(a.condition as any, userData),
+      })),
     };
   }
 
@@ -212,9 +226,12 @@ export class AchievementsService {
   /**
    * 获取用户成就数据
    */
-  private async getUserDataForAchievements(userId: string) {
-    const today = new Date();
+  private async getUserDataForAchievements(userId: string): Promise<AchievementUserData> {
+    const now = new Date();
+    const today = new Date(now);
     today.setHours(0, 0, 0, 0);
+    const streakStart = new Date(today);
+    streakStart.setDate(streakStart.getDate() - GOAL_STREAK_LOOKBACK_DAYS);
 
     const [
       latestCheckIn,
@@ -225,6 +242,9 @@ export class AchievementsService {
       firstWeight,
       weekMeals,
       weekWater,
+      profile,
+      recentMeals,
+      recentWater,
     ] = await Promise.all([
       this.prisma.dailyCheckIn.findFirst({
         where: { userId },
@@ -268,7 +288,24 @@ export class AchievementsService {
         },
         _sum: { amount: true },
       }),
+      this.prisma.userProfile.findUnique({
+        where: { userId },
+        select: { targetCalories: true, targetWater: true },
+      }),
+      this.prisma.mealRecord.findMany({
+        where: { userId, mealDate: { gte: streakStart } },
+        select: { mealDate: true, totalCalories: true },
+      }),
+      this.prisma.waterRecord.findMany({
+        where: { userId, recordDate: { gte: streakStart } },
+        select: { recordDate: true, amount: true },
+      }),
     ]);
+
+    const targetCalories = profile?.targetCalories || DEFAULT_TARGET_CALORIES;
+    const targetWater = profile?.targetWater || DEFAULT_TARGET_WATER_ML;
+    const dailyCalories = sumByLocalDay(recentMeals, (m) => m.mealDate, (m) => m.totalCalories);
+    const dailyWater = sumByLocalDay(recentWater, (w) => w.recordDate, (w) => w.amount);
 
     return {
       consecutiveCheckIn: latestCheckIn?.streakCount || 0,
@@ -279,41 +316,24 @@ export class AchievementsService {
       startWeight: firstWeight?.weight,
       weeklyMealCount: weekMeals,
       weeklyWaterAmount: weekWater._sum.amount || 0,
+      consecutiveNutritionGoalDays: countConsecutiveGoalDays(
+        dailyCalories,
+        (calories) => isNutritionGoalMet(calories, targetCalories),
+        now,
+      ),
+      consecutiveWaterGoalDays: countConsecutiveGoalDays(
+        dailyWater,
+        (amount) => isWaterGoalMet(amount, targetWater),
+        now,
+      ),
     };
   }
 
   /**
    * 检查成就条件
    */
-  private checkAchievementCondition(condition: any, userData: any): boolean {
-    switch (condition.type) {
-      case 'consecutive_check_in':
-        return userData.consecutiveCheckIn >= condition.days;
-
-      case 'total_workout_time':
-        return userData.totalWorkoutMinutes >= condition.minutes;
-
-      case 'weekly_workout':
-        return userData.weeklyWorkoutCount >= condition.count;
-
-      case 'total_meals':
-        return userData.totalMeals >= condition.count;
-
-      case 'consecutive_nutrition_goal':
-        // TODO: 实现连续营养达标检查
-        return false;
-
-      case 'consecutive_water_goal':
-        // TODO: 实现连续饮水目标检查
-        return false;
-
-      case 'weight_loss':
-        if (!userData.startWeight || !userData.currentWeight) return false;
-        return userData.startWeight - userData.currentWeight >= condition.kg;
-
-      default:
-        return false;
-    }
+  private checkAchievementCondition(condition: any, userData: AchievementUserData): boolean {
+    return isConditionMet(condition, userData);
   }
 
   /**

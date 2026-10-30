@@ -236,6 +236,8 @@ model Achievement {
 
   condition   Json  // 触发条件
 
+  userAchievements UserAchievement[]
+
   createdAt DateTime @default(now())
 
   @@map("achievements")

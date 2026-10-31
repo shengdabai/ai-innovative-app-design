@@ -43,6 +43,15 @@ describe('MenuController query parameters', () => {
     });
   });
 
+  // Express 5 defaults to the "simple" query parser, which keeps "taste[]" as a
+  // literal key, so @Query('taste') would be undefined. main.ts switches back to
+  // the "extended" parser; the array then reaches the String-typed parameter as
+  // "SPICY,SOUR" after the global ValidationPipe, the same as a comma list.
+  it('GET /menu/recipes accepts taste as a bracketed array (taste[]=A&taste[]=B)', async () => {
+    await request(app.getHttpServer()).get('/menu/recipes?q=salad&taste[]=SPICY&taste[]=SOUR').expect(200);
+    expect(menuService.searchRecipes).toHaveBeenCalledWith('salad', { ...noFilters, taste: ['SPICY', 'SOUR'] });
+  });
+
   // main.ts registers a global ValidationPipe with transform: true. It turns a
   // non-numeric query value into NaN before the route pipes run, and
   // DefaultValuePipe(undefined) maps NaN back to undefined, so the filter is skipped.

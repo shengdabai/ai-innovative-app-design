@@ -1,4 +1,5 @@
 import { CanActivate, ExecutionContext, INestApplication, Provider, Type, ValidationPipe } from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { Test } from '@nestjs/testing';
 import { JwtAuthGuard, JwtOptionalGuard } from '../guards/jwt-auth.guard';
 
@@ -7,8 +8,9 @@ export const TEST_USER_ID = 'user-1';
 /**
  * Builds a Nest HTTP app around one controller for request-level tests.
  * The JWT guards (required and optional) are replaced by a guard that attaches
- * a fixed user, and the global ValidationPipe uses the same options as main.ts
- * so query values go through the same pipe chain as in production.
+ * a fixed user. The query parser and the global ValidationPipe use the same
+ * settings as main.ts, so query values are parsed and go through the same pipe
+ * chain as in production.
  */
 export async function createControllerTestApp(
   controller: Type<unknown>,
@@ -31,7 +33,8 @@ export async function createControllerTestApp(
     .useValue(fakeAuthGuard)
     .compile();
 
-  const app = moduleRef.createNestApplication({ logger: false });
+  const app = moduleRef.createNestApplication<NestExpressApplication>({ logger: false });
+  app.set('query parser', 'extended');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

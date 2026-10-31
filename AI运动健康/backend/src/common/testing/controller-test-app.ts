@@ -1,18 +1,42 @@
-import { CanActivate, ExecutionContext, INestApplication, Provider, Type, ValidationPipe } from '@nestjs/common';
-import { Test } from '@nestjs/testing';
+import {
+  CanActivate,
+  ExecutionContext,
+  INestApplication,
+  ModuleMetadata,
+  Provider,
+  Type,
+  ValidationPipe,
+} from '@nestjs/common';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import { Test, TestingModuleBuilder } from '@nestjs/testing';
 import { JwtAuthGuard, JwtOptionalGuard } from '../guards/jwt-auth.guard';
 
 export const TEST_USER_ID = 'user-1';
 
 /**
  * Builds a Nest HTTP app around one controller for request-level tests.
- * The JWT guards (required and optional) are replaced by a guard that attaches
- * a fixed user, and the global ValidationPipe uses the same options as main.ts
- * so query values go through the same pipe chain as in production.
+ * See createTestApp for what is replaced and what mirrors main.ts.
  */
 export async function createControllerTestApp(
   controller: Type<unknown>,
   providers: Provider[],
+): Promise<INestApplication> {
+  return createTestApp({ controllers: [controller], providers });
+}
+
+/**
+ * Builds a Nest HTTP app from module metadata for request-level tests, for
+ * example `{ imports: [SomeModule] }` when a test needs the module's own
+ * configuration (such as its MulterModule options). `override` can replace
+ * providers on the testing module builder before it compiles.
+ * The JWT guards (required and optional) are replaced by a guard that attaches
+ * a fixed user. The query parser and the global ValidationPipe use the same
+ * settings as main.ts, so query values are parsed and go through the same pipe
+ * chain as in production.
+ */
+export async function createTestApp(
+  metadata: ModuleMetadata,
+  override: (builder: TestingModuleBuilder) => TestingModuleBuilder = (builder) => builder,
 ): Promise<INestApplication> {
   const fakeAuthGuard: CanActivate = {
     canActivate(context: ExecutionContext) {
@@ -21,17 +45,15 @@ export async function createControllerTestApp(
     },
   };
 
-  const moduleRef = await Test.createTestingModule({
-    controllers: [controller],
-    providers,
-  })
+  const moduleRef = await override(Test.createTestingModule(metadata))
     .overrideGuard(JwtAuthGuard)
     .useValue(fakeAuthGuard)
     .overrideGuard(JwtOptionalGuard)
     .useValue(fakeAuthGuard)
     .compile();
 
-  const app = moduleRef.createNestApplication({ logger: false });
+  const app = moduleRef.createNestApplication<NestExpressApplication>({ logger: false });
+  app.set('query parser', 'extended');
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,

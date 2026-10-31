@@ -175,11 +175,11 @@ psql -U postgres -h localhost ai_fitness < backup.sql
 
 ### 健康检查
 ```bash
-# 基础健康检查
-curl http://localhost:3000/health/simple
+# 基础健康检查(路由在全局前缀 API_PREFIX 下,默认 api/v1)
+curl http://localhost:3000/api/v1/health/simple
 
 # 详细健康检查
-curl http://localhost:3000/health
+curl http://localhost:3000/api/v1/health
 ```
 
 ### 日志查看

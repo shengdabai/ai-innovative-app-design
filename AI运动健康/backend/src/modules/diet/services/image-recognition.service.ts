@@ -1,4 +1,4 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import vision from '@google-cloud/vision';
 import axios from 'axios';
@@ -51,6 +51,12 @@ export class ImageRecognitionService {
   async recognizeFood(
     image: Express.Multer.File,
   ): Promise<RecognitionResult> {
+    // Checked outside the try block so the 400 reaches the client instead of
+    // being turned into an empty result.
+    if (!image?.buffer?.length) {
+      throw new BadRequestException('图片内容为空，无法识别');
+    }
+
     try {
       // 优先使用 Google Vision API
       if (this.visionClient) {

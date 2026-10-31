@@ -1,11 +1,18 @@
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  // Express 5 (Nest 11) defaults to the "simple" query parser, which does not
+  // parse bracket syntax: ?taste[]=A&taste[]=B would arrive as a "taste[]" key.
+  // Keep the Express 4 "extended" (qs) parser. The controller test helper
+  // (src/common/testing/controller-test-app.ts) sets the same parser.
+  app.set('query parser', 'extended');
 
   const configService = app.get(ConfigService);
 

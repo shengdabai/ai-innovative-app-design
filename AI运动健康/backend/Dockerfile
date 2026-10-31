@@ -50,9 +50,11 @@ USER nestjs
 # Expose port
 EXPOSE 3000
 
-# Health check
+# Health check. main.ts serves every route under the global prefix (API_PREFIX,
+# default api/v1) on PORT (default 3000), so probe /<prefix>/health/simple.
+# src/modules/health/health.controller.spec.ts runs this exact command.
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
-  CMD node -e "require('http').get('http://localhost:3000/health/simple', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"
+  CMD node -e "require('http').get('http://localhost:' + (process.env.PORT || 3000) + '/' + (process.env.API_PREFIX || 'api/v1') + '/health/simple', (r) => process.exit(r.statusCode === 200 ? 0 : 1)).on('error', () => process.exit(1))"
 
 # Start the application
 ENTRYPOINT ["dumb-init", "--"]
